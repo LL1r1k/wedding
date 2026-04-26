@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Свадьба Кирилла и Анжелики</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="page page--ticket">
+      <header class="hero">
+        <div class="hero__photo card-media" role="group" aria-label="Пара">
+          <img
+            class="hero__image"
+            src="img/image_1.jpg"
+            width="2560"
+            height="1707"
+            alt="Кирилл и Анжелика"
+            loading="eager"
+            decoding="async"
+          />
+          <h1 class="hero__title">Свадьба Кирилла и Анжелики</h1>
+        </div>
+        <section class="greeting block block--olive" aria-label="Приглашение">
+          <h2 class="greeting__headline">Дорогие друзья и близкие!</h2>
+          <p class="greeting__text">
+            В нашей жизни совсем скоро состоится важное событие — наша свадьба. Мы
+            будем очень счастливы, если вы присоединитесь к нам в этот особенный
+            день.
+          </p>
+        </section>
+      </header>
+
+      <section class="date-section block block--light" aria-labelledby="wedding-day-title">
+        <h2 id="wedding-day-title" class="section-title">День свадьбы 23 августа 2026</h2>
+        <div
+          class="calendar"
+          id="wedding-calendar"
+          data-year="2026"
+          data-month="8"
+          data-wedding-day="23"
+          role="group"
+          aria-label="Календарь: август 2026, день свадьбы 23"
+        >
+          <div class="calendar__weekdays" id="calendar-weekdays"></div>
+          <div class="calendar__grid" id="calendar-grid"></div>
+        </div>
+      </section>
+
+      <section class="program block block--olive" aria-labelledby="program-title">
+        <h2 id="program-title" class="section-title section-title--on-olive">Программа дня</h2>
+        <ol class="program__list">
+          <li><time datetime="16:00">16:00</time> <span>—</span> Сбор гостей</li>
+          <li><time datetime="22:00">22:00</time> <span>—</span> Окончание мероприятия</li>
+        </ol>
+      </section>
+
+      <section class="location block block--light" aria-labelledby="location-title">
+        <h2 id="location-title" class="section-title">Локация</h2>
+        <p class="location__venue">Экоотель <strong>«Окна в лес»</strong></p>
+        <p class="location__address">Воткинское шоссе, 18&nbsp;км</p>
+        <div class="location__venue-photo card-media">
+          <img
+            src="img/image_3.jpg"
+            width="433"
+            height="596"
+            alt="Площадка: экоотель «Окна в лес»"
+            loading="lazy"
+            decoding="async"
+          />
+        </div>
+        <div class="location__map card-media">
+          <iframe
+            class="map-embed"
+            title="Карта: экоотель «Окна в лес», Воткинское шоссе, 18 км"
+            src="https://yandex.ru/map-widget/v1/?ll=53.441253%2C56.898589&z=16&l=map&ol=biz&oid=242993101496"
+            width="100%"
+            height="400"
+            loading="lazy"
+            allowfullscreen
+            referrerpolicy="no-referrer-when-downgrade"
+          ></iframe>
+        </div>
+        <p class="location__map-note">
+          <a class="location__map-link" href="https://yandex.ru/maps/-/CPGwZA0~" rel="noopener noreferrer" target="_blank"
+            >Открыть в Яндекс.Картах</a
+          >
+        </p>
+      </section>
+
+      <section class="gifts block block--light" aria-labelledby="gifts-title">
+        <h2 id="gifts-title" class="section-title">Подарки</h2>
+        <div class="content-text">
+          <p>
+            Мы очень ценим вашу заботу и внимание и будем рады любому подарку — особенно если
+            он удобно помещается в конверт и помогает нам воплощать общие мечты.
+          </p>
+        </div>
+      </section>
+
+      <section class="flowers block block--light" aria-labelledby="flowers-title">
+        <h2 id="flowers-title" class="section-title">Цветы</h2>
+        <div class="content-text">
+          <p>
+            Наш праздник будет окружён природой, зеленью и цветами, поэтому, если хотите, вы
+            можете заменить букет на тёплые объятия или частичку своего внимания в другой
+            форме.
+          </p>
+        </div>
+      </section>
+
+      <section class="dress-code block block--light" aria-labelledby="dress-title">
+        <h2 id="dress-title" class="section-title">Дресс-код</h2>
+        <div class="content-text">
+          <p>
+            Мы будем безгранично счастливы видеть вас на нашем торжестве, выполненном в стиле
+            бохо и натуральной природной эстетике.
+          </p>
+          <p>
+            Просим поддержать цветовую гамму: натуральные оттенки, пастельные тона и мягкие
+            природные цвета.
+          </p>
+        </div>
+        <ul class="dress-code__swatches" aria-hidden="true">
+          <li><span class="swatch" style="--c: #5e674f" title="оливковый"></span></li>
+          <li><span class="swatch" style="--c: #8b9a7a" title="sage"></span></li>
+          <li><span class="swatch" style="--c: #3c3633" title="тёплый уголь"></span></li>
+          <li><span class="swatch swatch--border" style="--c: #f5f1e9" title="кремовый"></span></li>
+        </ul>
+      </section>
+
+      <section class="details block block--light" aria-labelledby="details-title">
+        <h2 id="details-title" class="section-title">Детали</h2>
+        <div class="content-text">
+          <p>
+            Мы очень хотим, чтобы этот день был лёгким и непринуждённым — поэтому не
+            переживайте, тосты никто не обязан говорить 😊
+          </p>
+          <p>
+            Но если вам очень захочется оставить след в нашей истории — наши организаторы с
+            радостью помогут воплотить любые идеи.
+          </p>
+        </div>
+      </section>
+
+      <section class="rsvp block block--olive" id="anketa" aria-labelledby="rsvp-title">
+        <h2 id="rsvp-title" class="section-title section-title--on-olive">Анкета гостя</h2>
+        <p class="rsvp__request">Пожалуйста, заполните анкету.</p>
+        <form class="form" id="rsvp-form" novalidate>
+          <p class="form__error" id="form-error" role="alert" hidden></p>
+          <div class="form__row">
+            <label for="full_name">Имя и фамилия</label>
+            <input type="text" id="full_name" name="full_name" autocomplete="name" required />
+          </div>
+          <fieldset class="form__fieldset">
+            <legend class="form__legend">Подтвердите своё присутствие:</legend>
+            <div class="form__radios">
+              <label class="choice">
+                <input type="radio" name="attending" value="true" required />
+                <span class="choice__ui" aria-hidden="true"></span>
+                Я приду
+              </label>
+              <label class="choice">
+                <input type="radio" name="attending" value="false" required />
+                <span class="choice__ui" aria-hidden="true"></span>
+                Я не приду
+              </label>
+            </div>
+          </fieldset>
+          <div class="form__row form__row--check">
+            <label class="choice choice--check choice--inline">
+              <input
+                type="checkbox"
+                name="stay_overnight"
+                id="stay_overnight"
+                value="1"
+                aria-describedby="overnight-hint"
+              />
+              <span class="choice__ui" aria-hidden="true"></span>
+              Планирую ночёвку / остаться на ночь
+            </label>
+            <p class="form__overnight-info" id="overnight-hint">
+              Помимо аренды <strong>летней веранды</strong> для гостей мы дополнительно
+              снимаем <strong>несколько отдельных домиков</strong> — в каждом до
+              <strong>6</strong> человек, чтобы всем, кто останется, было комфортно.
+            </p>
+          </div>
+          <fieldset class="form__fieldset">
+            <legend class="form__legend">Пожелания по напиткам</legend>
+            <p class="form__note" id="alcohol-hint">Можно отметить несколько вариантов — уйдёт в анкету отдельным полем.</p>
+            <div class="form__checkboxes" aria-describedby="alcohol-hint">
+              <label class="choice choice--check">
+                <input type="checkbox" name="alcohol" value="champagne" />
+                <span class="choice__ui" aria-hidden="true"></span>
+                Шампанское
+              </label>
+              <label class="choice choice--check">
+                <input type="checkbox" name="alcohol" value="red" />
+                <span class="choice__ui" aria-hidden="true"></span>
+                Вино красное
+              </label>
+              <label class="choice choice--check">
+                <input type="checkbox" name="alcohol" value="white" />
+                <span class="choice__ui" aria-hidden="true"></span>
+                Вино белое
+              </label>
+              <label class="choice choice--check">
+                <input type="checkbox" name="alcohol" value="vodka" />
+                <span class="choice__ui" aria-hidden="true"></span>
+                Водка
+              </label>
+              <label class="choice choice--check">
+                <input type="checkbox" name="alcohol" value="whiskey" />
+                <span class="choice__ui" aria-hidden="true"></span>
+                Виски
+              </label>
+              <label class="choice choice--check">
+                <input type="checkbox" name="alcohol" value="cognac" />
+                <span class="choice__ui" aria-hidden="true"></span>
+                Коньяк
+              </label>
+              <label class="choice choice--check">
+                <input type="checkbox" name="alcohol" value="none" class="alcohol-no" />
+                <span class="choice__ui" aria-hidden="true"></span>
+                Не пью алкоголь
+              </label>
+            </div>
+          </fieldset>
+          <div class="form__row">
+            <label for="allergy">Аллергия / пищевая непереносимость (если есть)</label>
+            <textarea
+              id="allergy"
+              name="allergy"
+              class="form__textarea"
+              rows="3"
+              placeholder="Кратко опишите, или оставьте пустым"
+            ></textarea>
+          </div>
+          <button type="submit" class="btn btn--light" id="rsvp-submit">Отправить</button>
+        </form>
+        <p class="form__thanks" id="form-thanks" role="status" hidden>Спасибо! Мы свяжемся с вами ближе к дате.</p>
+      </section>
+
+      <section class="organizer" aria-labelledby="org-title">
+        <h2 id="org-title" class="visually-hidden">Свадебный организатор</h2>
+        <p class="organizer__text">
+          По всем вопросам, пожалуйста, обращайтесь к нашему организатору <strong>Наталье</strong>: 
+          <a class="organizer__tel" href="tel:+79120156765">+7&nbsp;912&nbsp;015-67-65</a>
+        </p>
+        <a class="btn btn--olive" href="tel:+79120156765" id="call-natalia">Позвонить</a>
+      </section>
+
+      <footer class="footer card-media" aria-label="Пара в поле">
+        <img
+          src="img/image_2.jpg"
+          width="1707"
+          height="2560"
+          alt="Кирилл и Анжелика"
+          loading="lazy"
+          decoding="async"
+        />
+      </footer>
+    </main>
+    <script src="app.js" defer></script>
+  </body>
+</html>

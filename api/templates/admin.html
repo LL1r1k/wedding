@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Админка — ответы опросника</title>
+  <style>
+    body { font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; padding: 24px; color: #222; }
+    h1 { margin: 0 0 12px 0; font-size: 22px; }
+    .meta { margin-bottom: 18px; color:#555; }
+    .actions { display:flex; gap:12px; align-items:center; margin: 14px 0 18px; }
+    a.button { display:inline-block; padding:10px 14px; border-radius:10px; text-decoration:none; background:#111; color:#fff; }
+    table { border-collapse: collapse; width: 100%; }
+    th, td { border-bottom: 1px solid #eee; padding: 10px 8px; text-align: left; vertical-align: top; }
+    th { font-weight: 600; background: #fafafa; position: sticky; top: 0; }
+    .badge { display:inline-block; padding: 2px 8px; border-radius: 999px; background:#f0f0f0; font-size: 12px; }
+    .empty { padding: 16px; border: 1px dashed #ddd; border-radius: 12px; color:#666; }
+    .small { font-size: 12px; color:#666; }
+    .row-actions { display:flex; gap:10px; align-items:center; }
+    a.linkbtn { display:inline-block; padding:6px 10px; border-radius:10px; text-decoration:none; background:#111; color:#fff; font-size: 12px; }
+    button.linkbtn { padding:6px 10px; border-radius:10px; border:0; background:#b00020; color:#fff; font-size:12px; cursor:pointer; }
+    button.linkbtn:active { transform: translateY(1px); }
+  </style>
+</head>
+<body>
+  <h1>Опросник для гостей — ответы</h1>
+  <div class="meta">
+    Всего ответов: <span class="badge">{{ total }}</span>
+    <div class="small">Экспорт выгружает текущую таблицу в .xlsx</div>
+  </div>
+
+  <div class="actions">
+    <a class="button" href="/admin/export.xlsx">Скачать Excel (.xlsx)</a>
+    <a class="button" href="/admin" style="background:#444;">Обновить</a>
+  </div>
+
+  {% if rows|length == 0 %}
+    <div class="empty">Пока нет ответов.</div>
+  {% else %}
+  <table>
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Дата/время</th>
+        <th>Имя и фамилия</th>
+        <th>Планирует присутствовать</th>
+	<th>Планирует остаться на ночь</th>
+	<th>Пожелания по напиткам</th>
+	<th>Аллергия</th>
+        <th>Действия</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for r in rows %}
+      <tr>
+        <td>{{ r.id }}</td>
+        <td>{{ r.created_at }}</td>
+        <td>{{ r.full_name }}</td>
+        <td>{% if r.attending %}Да{% else %}Нет{% endif %}</td>        
+	<td>{% if r.stay_overnight %}Да{% else %}Нет{% endif %}</td>
+	<td>{{ r.dring_suggestings }}</td>
+	<td>{{ r.allergy }}</td>
+	<td>
+          <div class="row-actions">
+            <a class="linkbtn" href="/admin/edit/{{ r.id }}">Редактировать</a>
+            <form method="post" action="/admin/delete/{{ r.id }}" onsubmit="return confirm('Удалить запись #{{ r.id }}?');">
+              <button class="linkbtn" type="submit">Удалить</button>
+            </form>
+          </div>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% endif %}
+</body>
+</html>

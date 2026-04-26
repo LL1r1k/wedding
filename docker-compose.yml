@@ -1,0 +1,18 @@
+services:
+  web:
+    build: .
+    ports:
+      - "7080:80"
+    depends_on:
+      - api
+    restart: unless-stopped
+
+  api:
+    build: ./api
+    environment:
+      - ADMIN_USER=admin
+      - ADMIN_PASS=change_me
+      - DB_PATH=/data/rsvp.db
+    volumes:
+      - ./data:/data
+    restart: unless-stopped
