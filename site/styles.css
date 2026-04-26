@@ -529,6 +529,12 @@ img {
   text-shadow: 0 1px 0 rgba(0, 0, 0, 0.1);
 }
 
+/* Скрываем после начала работы с формой или после успешной отправки */
+.rsvp.is-filling .rsvp__request,
+.rsvp.is-sent .rsvp__request {
+  display: none;
+}
+
 .form {
   text-align: left;
 }
@@ -608,6 +614,26 @@ img {
   line-height: 1.5;
 }
 
+.form__textarea--compact {
+  min-height: 3.15rem;
+}
+
+.form__alcohol-other-wrap {
+  width: 100%;
+  max-width: 100%;
+  margin: 0.2rem 0 0.15rem;
+  box-sizing: border-box;
+}
+
+.form__alcohol-other-label {
+  display: block;
+  font-size: 0.8rem;
+  font-weight: 500;
+  margin: 0 0 0.4rem 0.05rem;
+  color: rgba(255, 255, 255, 0.9);
+  letter-spacing: 0.02em;
+}
+
 .form__row input::placeholder,
 .form__textarea::placeholder {
   color: #9a9a9a;
@@ -638,6 +664,54 @@ img {
   font-size: 0.75rem;
   margin: -0.1rem 0 0.55rem;
   color: rgba(255, 255, 255, 0.75);
+}
+
+.form__attend-row {
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+  gap: 0.45rem 1rem;
+  width: 100%;
+}
+
+.form__attend-yes {
+  flex: 0 1 auto;
+}
+
+.form__attend-plus1 {
+  flex: 0 0 auto;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+}
+
+.form__overnight-block {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.45rem;
+  width: 100%;
+}
+
+.form__overnight-block .choice--inline {
+  margin-bottom: 0;
+}
+
+/* Второй чекбокс — тот же вид, что и «Планирую ночёвку», до активации приглушён */
+.form__overnight-plus1 {
+  width: 100%;
+  max-width: 100%;
+  transition: opacity 0.2s;
+}
+
+.form__overnight-plus1.is-disabled {
+  opacity: 0.45;
+  pointer-events: none;
+  cursor: default;
+}
+
+.form__attend-plus1.is-disabled {
+  opacity: 0.45;
+  pointer-events: none;
 }
 
 .form__radios,

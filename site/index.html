@@ -160,12 +160,31 @@
           </div>
           <fieldset class="form__fieldset">
             <legend class="form__legend">Подтвердите своё присутствие:</legend>
-            <div class="form__radios">
-              <label class="choice">
-                <input type="radio" name="attending" value="true" required />
-                <span class="choice__ui" aria-hidden="true"></span>
-                Я приду
-              </label>
+            <div class="form__radios" role="group" aria-label="Присутствие и +1">
+              <div class="form__attend-row">
+                <label class="choice form__attend-yes">
+                  <input type="radio" name="attending" value="true" required />
+                  <span class="choice__ui" aria-hidden="true"></span>
+                  Я приду
+                </label>
+                <div class="form__with-couple-only" id="form-attend-couple" hidden>
+                  <label
+                    class="choice choice--check form__attend-plus1"
+                    for="with_partner"
+                    title="Приду с сопровождающим (+1)"
+                    aria-label="Сопровождающий гость, плюс один"
+                  >
+                    <input
+                      type="checkbox"
+                      name="with_partner"
+                      id="with_partner"
+                      value="1"
+                    />
+                    <span class="choice__ui" aria-hidden="true"></span>
+                    <span aria-hidden="true">+1</span>
+                  </label>
+                </div>
+              </div>
               <label class="choice">
                 <input type="radio" name="attending" value="false" required />
                 <span class="choice__ui" aria-hidden="true"></span>
@@ -174,17 +193,41 @@
             </div>
           </fieldset>
           <div class="form__row form__row--check">
-            <label class="choice choice--check choice--inline">
-              <input
-                type="checkbox"
-                name="stay_overnight"
-                id="stay_overnight"
-                value="1"
-                aria-describedby="overnight-hint"
-              />
-              <span class="choice__ui" aria-hidden="true"></span>
-              Планирую ночёвку / остаться на ночь
-            </label>
+            <div class="form__overnight-block">
+              <label class="choice choice--check choice--inline">
+                <input
+                  type="checkbox"
+                  name="stay_overnight"
+                  id="stay_overnight"
+                  value="1"
+                  aria-describedby="overnight-hint"
+                />
+                <span class="choice__ui" aria-hidden="true"></span>
+                Планирую ночёвку / остаться на ночь
+              </label>
+              <div class="form__with-couple-only" id="form-overnight-couple" hidden>
+                <label
+                  class="choice choice--check choice--inline form__overnight-plus1 is-disabled"
+                  for="overnight_plus1"
+                  title="Станет доступно, если отмечена ночёвка"
+                >
+                  <input
+                    type="checkbox"
+                    name="overnight_plus1"
+                    id="overnight_plus1"
+                    value="1"
+                    disabled
+                    aria-describedby="overnight-plus1-desc"
+                  />
+                  <span class="choice__ui" aria-hidden="true"></span>
+                  Планирую на ночевку +1
+                </label>
+                <p class="visually-hidden" id="overnight-plus1-desc">
+                  Отметьте, если сопровождающему, как и вам, нужна ночёвка. Активно при выбранной
+                  ночёвке.
+                </p>
+              </div>
+            </div>
             <p class="form__overnight-info" id="overnight-hint">
               Помимо аренды <strong>летней веранды</strong> для гостей мы дополнительно
               снимаем <strong>несколько отдельных домиков</strong> — в каждом до
@@ -213,7 +256,7 @@
               <label class="choice choice--check">
                 <input type="checkbox" name="alcohol" value="vodka" />
                 <span class="choice__ui" aria-hidden="true"></span>
-                Водка
+                Джин
               </label>
               <label class="choice choice--check">
                 <input type="checkbox" name="alcohol" value="whiskey" />
@@ -226,10 +269,32 @@
                 Коньяк
               </label>
               <label class="choice choice--check">
+                <input type="checkbox" name="alcohol" value="other" class="alcohol-other" />
+                <span class="choice__ui" aria-hidden="true"></span>
+                Другое
+              </label>
+              <label class="choice choice--check">
                 <input type="checkbox" name="alcohol" value="none" class="alcohol-no" />
                 <span class="choice__ui" aria-hidden="true"></span>
                 Не пью алкоголь
               </label>
+            </div>
+            <div
+              class="form__alcohol-other-wrap is-disabled"
+              id="alcohol-other-wrap"
+              hidden
+            >
+              <label class="form__alcohol-other-label" for="alcohol_other">Напишите, что по душе</label>
+              <textarea
+                id="alcohol_other"
+                name="alcohol_other"
+                class="form__textarea form__textarea--compact"
+                rows="2"
+                maxlength="2000"
+                disabled
+                placeholder="Например: игристое, коктейли без сахара…"
+                aria-label="Своё пожелание по напиткам"
+              ></textarea>
             </div>
           </fieldset>
           <div class="form__row">

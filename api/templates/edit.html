@@ -8,15 +8,20 @@
     body { font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; padding: 24px; color: #222; }
     h1 { margin: 0 0 12px 0; font-size: 22px; }
     .meta { margin-bottom: 18px; color:#555; }
-    .card { max-width: 680px; border: 1px solid #eee; border-radius: 16px; padding: 16px; background: #fff; box-shadow: 0 1px 0 rgba(0,0,0,0.03); }
-    label { display:block; font-weight: 600; margin: 12px 0 6px; }
-    input[type="text"], select { width: 100%; padding: 10px 12px; border-radius: 12px; border: 1px solid #ddd; font-size: 14px; }
-    .actions { display:flex; gap: 12px; margin-top: 16px; }
+    .card { max-width: 720px; border: 1px solid #eee; border-radius: 16px; padding: 20px; background: #fff; box-shadow: 0 1px 0 rgba(0,0,0,0.03); }
+    label { display:block; font-weight: 600; margin: 14px 0 6px; }
+    label:first-of-type { margin-top: 0; }
+    .hint { font-size: 12px; font-weight: 400; color: #666; margin: 2px 0 0; }
+    input[type="text"], select, textarea {
+      width: 100%; max-width: 100%; box-sizing: border-box;
+      padding: 10px 12px; border-radius: 12px; border: 1px solid #ddd; font-size: 14px;
+    }
+    textarea { min-height: 100px; resize: vertical; font-family: inherit; line-height: 1.45; }
+    .actions { display:flex; gap: 12px; margin-top: 20px; flex-wrap: wrap; }
     a.button { display:inline-block; padding:10px 14px; border-radius:10px; text-decoration:none; background:#444; color:#fff; }
     button.button { padding:10px 14px; border-radius:10px; border:0; background:#111; color:#fff; cursor:pointer; }
     .small { font-size: 12px; color:#666; }
     .kv { display:flex; flex-wrap: wrap; gap: 10px 16px; margin: 8px 0 0; }
-    .kv div { font-size: 13px; color:#444; }
     .badge { display:inline-block; padding: 2px 8px; border-radius: 999px; background:#f0f0f0; font-size: 12px; }
   </style>
 </head>
@@ -24,9 +29,9 @@
   <h1>Редактирование ответа <span class="badge">#{{ r.id }}</span></h1>
   <div class="meta">
     <div class="kv">
-      <div><b>Дата/время:</b> {{ r.created_at }}</div>
+      <div><b>Дата/время создания:</b> {{ r.created_at }}</div>
     </div>
-    <div class="small">После сохранения вы вернётесь к общей таблице.</div>
+    <div class="small">Поле «дата/время» хранится в БД и не меняется при сохранении.</div>
   </div>
 
   <div class="card">
@@ -34,11 +39,37 @@
       <label for="full_name">Имя и фамилия</label>
       <input id="full_name" name="full_name" type="text" value="{{ r.full_name }}" maxlength="200" required>
 
+      <label for="with_partner">С парой / +1 гость (with_partner)</label>
+      <p class="hint">Да — если гость отметил +1 в анкете (приду с сопровождающим).</p>
+      <select id="with_partner" name="with_partner" required>
+        <option value="0" {% if not r.with_partner %}selected{% endif %}>Нет</option>
+        <option value="1" {% if r.with_partner %}selected{% endif %}>Да</option>
+      </select>
+
       <label for="attending">Планирует присутствовать</label>
       <select id="attending" name="attending" required>
         <option value="1" {% if r.attending %}selected{% endif %}>Да</option>
         <option value="0" {% if not r.attending %}selected{% endif %}>Нет</option>
       </select>
+
+      <label for="stay_overnight">Планирует ночёвку</label>
+      <select id="stay_overnight" name="stay_overnight" required>
+        <option value="0" {% if not r.stay_overnight %}selected{% endif %}>Нет</option>
+        <option value="1" {% if r.stay_overnight %}selected{% endif %}>Да</option>
+      </select>
+
+      <label for="overnight_plus1">+1 на ночёвку (overnight_plus1)</label>
+      <p class="hint">Сопровождающий тоже остаётся ночевать (имеет смысл при ночёвке и +1 к присутствию).</p>
+      <select id="overnight_plus1" name="overnight_plus1" required>
+        <option value="0" {% if not r.overnight_plus1 %}selected{% endif %}>Нет</option>
+        <option value="1" {% if r.overnight_plus1 %}selected{% endif %}>Да</option>
+      </select>
+
+      <label for="dring_suggestings">Пожелания по напиткам (dring_suggestings)</label>
+      <textarea id="dring_suggestings" name="dring_suggestings" maxlength="2000" rows="4">{{ r.dring_suggestings or '' }}</textarea>
+
+      <label for="allergy">Аллергия / пищевая непереносимость</label>
+      <textarea id="allergy" name="allergy" maxlength="2000" rows="4">{{ r.allergy or '' }}</textarea>
 
       <div class="actions">
         <button class="button" type="submit">Сохранить</button>

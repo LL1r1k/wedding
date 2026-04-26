@@ -80,6 +80,10 @@ def db_init() -> None:
                 "ALTER TABLE rsvp_responses ADD COLUMN dring_suggestings TEXT NOT NULL DEFAULT ''",
             ),
             ("allergy", "ALTER TABLE rsvp_responses ADD COLUMN allergy TEXT NOT NULL DEFAULT ''"),
+            (
+                "overnight_plus1",
+                "ALTER TABLE rsvp_responses ADD COLUMN overnight_plus1 INTEGER NOT NULL DEFAULT 0",
+            ),
         ):
             if col not in _table_columns(conn):
                 conn.execute(ddl)
@@ -92,6 +96,8 @@ def db_init() -> None:
 class RsvpCreate(BaseModel):
     """
     Соответствует POST /api/rsvp (см. фронт: app.js buildRsvpPayload).
+    with_partner / overnight_plus1: фронт шлёт только при согласованных смыслах
+    (присутствие + ночёвка), на бэке при вставке ещё раз нормализуются.
     Поле dring_suggestings — как в API-контракте (доп. опечатка в имени сохраняется).
     """
 
@@ -99,7 +105,9 @@ class RsvpCreate(BaseModel):
 
     full_name: str = Field(..., min_length=1, max_length=200)
     attending: bool
+    with_partner: bool = False
     stay_overnight: bool = False
+    overnight_plus1: bool = False
     dring_suggestings: str = Field(default="", max_length=2000)
     allergy: str = Field(default="", max_length=2000)
 
@@ -126,19 +134,24 @@ async def create_rsvp(body: RsvpCreate) -> Dict[str, Any]:
 
     conn = db_connect()
     try:
+        attending = 1 if body.attending else 0
+        with_partner = 1 if (body.attending and body.with_partner) else 0
+        stay_overnight = 1 if body.stay_overnight else 0
+        overnight_plus1 = 1 if (body.stay_overnight and body.overnight_plus1) else 0
         conn.execute(
             """
             INSERT INTO rsvp_responses (
                 created_at, full_name, with_partner, attending,
-                stay_overnight, dring_suggestings, allergy
-            ) VALUES (?, ?, ?, ?, ?, ?, ?)
+                stay_overnight, overnight_plus1, dring_suggestings, allergy
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)
             """,
             (
                 created_at,
                 body.full_name,
-                0,
-                1 if body.attending else 0,
-                1 if body.stay_overnight else 0,
+                with_partner,
+                attending,
+                stay_overnight,
+                overnight_plus1,
                 body.dring_suggestings,
                 body.allergy,
             ),
@@ -155,7 +168,7 @@ def fetch_rows() -> List[sqlite3.Row]:
         cur = conn.execute(
             """
             SELECT id, created_at, full_name, with_partner, attending,
-                   stay_overnight, dring_suggestings, allergy
+                   stay_overnight, overnight_plus1, dring_suggestings, allergy
             FROM rsvp_responses ORDER BY id DESC
             """
         )
@@ -169,7 +182,7 @@ def fetch_row(response_id: int) -> sqlite3.Row | None:
         cur = conn.execute(
             """
             SELECT id, created_at, full_name, with_partner, attending,
-                   stay_overnight, dring_suggestings, allergy
+                   stay_overnight, overnight_plus1, dring_suggestings, allergy
             FROM rsvp_responses WHERE id = ?
             """,
             (response_id,),
@@ -202,7 +215,9 @@ async def admin_edit_save(response_id: int, request: Request) -> RedirectRespons
     form = await request.form()
     full_name = str(form.get("full_name", "")).strip()
     attending_raw = str(form.get("attending", "")).strip()
-    stay_overnight_raw = str(form.get("stay_overnight", "")).lower()
+    with_partner_raw = str(form.get("with_partner", "")).strip()
+    stay_overnight_raw = str(form.get("stay_overnight", "")).strip()
+    overnight_plus1_raw = str(form.get("overnight_plus1", "")).strip()
     dring_suggestings = str(form.get("dring_suggestings", ""))[:2000]
     allergy = str(form.get("allergy", ""))[:2000]
 
@@ -211,10 +226,19 @@ async def admin_edit_save(response_id: int, request: Request) -> RedirectRespons
     if len(full_name) > 200:
         raise HTTPException(status_code=400, detail="full_name is too long")
 
-    if attending_raw not in {"1", "0"}:
-        raise HTTPException(status_code=400, detail="attending must be 1 or 0")
+    for label, val in (
+        ("attending", attending_raw),
+        ("with_partner", with_partner_raw),
+        ("stay_overnight", stay_overnight_raw),
+        ("overnight_plus1", overnight_plus1_raw),
+    ):
+        if val not in {"1", "0"}:
+            raise HTTPException(status_code=400, detail=f"{label} must be 0 or 1")
+
     attending = 1 if attending_raw == "1" else 0
-    stay_overnight = 1 if stay_overnight_raw in {"1", "on", "true", "yes"} else 0
+    with_partner = 1 if with_partner_raw == "1" else 0
+    stay_overnight = 1 if stay_overnight_raw == "1" else 0
+    overnight_plus1 = 1 if overnight_plus1_raw == "1" else 0
 
     conn = db_connect()
     try:
@@ -225,13 +249,24 @@ async def admin_edit_save(response_id: int, request: Request) -> RedirectRespons
             """
             UPDATE rsvp_responses SET
                 full_name = ?,
+                with_partner = ?,
                 attending = ?,
                 stay_overnight = ?,
+                overnight_plus1 = ?,
                 dring_suggestings = ?,
                 allergy = ?
             WHERE id = ?
             """,
-            (full_name, attending, stay_overnight, dring_suggestings, allergy, response_id),
+            (
+                full_name,
+                with_partner,
+                attending,
+                stay_overnight,
+                overnight_plus1,
+                dring_suggestings,
+                allergy,
+                response_id,
+            ),
         )
         conn.commit()
     finally:
@@ -263,8 +298,10 @@ def export_xlsx() -> StreamingResponse:
             "ID",
             "Дата/время",
             "Имя и фамилия",
+            "С парой / +1 (with_partner)",
             "Планирует присутствовать",
             "Ночёвка",
+            "+1 на ночёвку (overnight_plus1)",
             "Пожелания по напиткам (dring_suggestings)",
             "Аллергия / непереносимость",
         ]
@@ -275,8 +312,10 @@ def export_xlsx() -> StreamingResponse:
                 r["id"],
                 r["created_at"],
                 r["full_name"],
+                "Да" if r["with_partner"] else "Нет",
                 "Да" if r["attending"] else "Нет",
                 "Да" if r["stay_overnight"] else "Нет",
+                "Да" if r["overnight_plus1"] else "Нет",
                 r["dring_suggestings"] or "",
                 r["allergy"] or "",
             ]
