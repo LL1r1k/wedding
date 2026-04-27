@@ -478,10 +478,18 @@ img {
   margin-bottom: 0;
 }
 
+.links-external__btn {
+  max-width: 22rem;
+  margin-left: auto;
+  margin-right: auto;
+}
+
 .gifts .section-title,
 .flowers .section-title,
 .details .section-title,
-.dress-code .section-title {
+.dress-code .section-title,
+.links-tg .section-title,
+.links-cloud .section-title {
   text-align: center;
   color: var(--text-heading);
   margin-left: auto;
