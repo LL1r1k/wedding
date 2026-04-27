@@ -71,6 +71,9 @@
       <label for="allergy">Аллергия / пищевая непереносимость</label>
       <textarea id="allergy" name="allergy" maxlength="2000" rows="4">{{ r.allergy or '' }}</textarea>
 
+      <label for="extra_comment">Дополнительный комментарий (extra_comment)</label>
+      <textarea id="extra_comment" name="extra_comment" maxlength="2000" rows="4">{{ r.extra_comment or '' }}</textarea>
+
       <div class="actions">
         <button class="button" type="submit">Сохранить</button>
         <a class="button" href="/admin">Отмена</a>

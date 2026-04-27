@@ -84,6 +84,10 @@ def db_init() -> None:
                 "overnight_plus1",
                 "ALTER TABLE rsvp_responses ADD COLUMN overnight_plus1 INTEGER NOT NULL DEFAULT 0",
             ),
+            (
+                "extra_comment",
+                "ALTER TABLE rsvp_responses ADD COLUMN extra_comment TEXT NOT NULL DEFAULT ''",
+            ),
         ):
             if col not in _table_columns(conn):
                 conn.execute(ddl)
@@ -99,6 +103,7 @@ class RsvpCreate(BaseModel):
     with_partner / overnight_plus1: фронт шлёт только при согласованных смыслах
     (присутствие + ночёвка), на бэке при вставке ещё раз нормализуются.
     Поле dring_suggestings — как в API-контракте (доп. опечатка в имени сохраняется).
+    extra_comment — свободный комментарий с лендинга.
     """
 
     model_config = ConfigDict(extra="ignore", str_strip_whitespace=True)
@@ -110,8 +115,9 @@ class RsvpCreate(BaseModel):
     overnight_plus1: bool = False
     dring_suggestings: str = Field(default="", max_length=2000)
     allergy: str = Field(default="", max_length=2000)
+    extra_comment: str = Field(default="", max_length=2000)
 
-    @field_validator("dring_suggestings", "allergy", mode="before")
+    @field_validator("dring_suggestings", "allergy", "extra_comment", mode="before")
     @classmethod
     def _null_to_str(cls, v: object) -> str:
         if v is None:
@@ -142,8 +148,8 @@ async def create_rsvp(body: RsvpCreate) -> Dict[str, Any]:
             """
             INSERT INTO rsvp_responses (
                 created_at, full_name, with_partner, attending,
-                stay_overnight, overnight_plus1, dring_suggestings, allergy
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+                stay_overnight, overnight_plus1, dring_suggestings, allergy, extra_comment
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
             """,
             (
                 created_at,
@@ -154,6 +160,7 @@ async def create_rsvp(body: RsvpCreate) -> Dict[str, Any]:
                 overnight_plus1,
                 body.dring_suggestings,
                 body.allergy,
+                body.extra_comment,
             ),
         )
         conn.commit()
@@ -168,7 +175,7 @@ def fetch_rows() -> List[sqlite3.Row]:
         cur = conn.execute(
             """
             SELECT id, created_at, full_name, with_partner, attending,
-                   stay_overnight, overnight_plus1, dring_suggestings, allergy
+                   stay_overnight, overnight_plus1, dring_suggestings, allergy, extra_comment
             FROM rsvp_responses ORDER BY id DESC
             """
         )
@@ -182,7 +189,7 @@ def fetch_row(response_id: int) -> sqlite3.Row | None:
         cur = conn.execute(
             """
             SELECT id, created_at, full_name, with_partner, attending,
-                   stay_overnight, overnight_plus1, dring_suggestings, allergy
+                   stay_overnight, overnight_plus1, dring_suggestings, allergy, extra_comment
             FROM rsvp_responses WHERE id = ?
             """,
             (response_id,),
@@ -220,6 +227,7 @@ async def admin_edit_save(response_id: int, request: Request) -> RedirectRespons
     overnight_plus1_raw = str(form.get("overnight_plus1", "")).strip()
     dring_suggestings = str(form.get("dring_suggestings", ""))[:2000]
     allergy = str(form.get("allergy", ""))[:2000]
+    extra_comment = str(form.get("extra_comment", ""))[:2000]
 
     if not full_name:
         raise HTTPException(status_code=400, detail="full_name is required")
@@ -254,7 +262,8 @@ async def admin_edit_save(response_id: int, request: Request) -> RedirectRespons
                 stay_overnight = ?,
                 overnight_plus1 = ?,
                 dring_suggestings = ?,
-                allergy = ?
+                allergy = ?,
+                extra_comment = ?
             WHERE id = ?
             """,
             (
@@ -265,6 +274,7 @@ async def admin_edit_save(response_id: int, request: Request) -> RedirectRespons
                 overnight_plus1,
                 dring_suggestings,
                 allergy,
+                extra_comment,
                 response_id,
             ),
         )
@@ -304,6 +314,7 @@ def export_xlsx() -> StreamingResponse:
             "+1 на ночёвку (overnight_plus1)",
             "Пожелания по напиткам (dring_suggestings)",
             "Аллергия / непереносимость",
+            "Комментарий (extra_comment)",
         ]
     )
     for r in rows[::-1]:
@@ -318,6 +329,7 @@ def export_xlsx() -> StreamingResponse:
                 "Да" if r["overnight_plus1"] else "Нет",
                 r["dring_suggestings"] or "",
                 r["allergy"] or "",
+                r["extra_comment"] or "",
             ]
         )
 

@@ -85,7 +85,7 @@
     champagne: "шампанское",
     red: "вино красное",
     white: "вино белое",
-    vodka: "водка",
+    gin: "джин",
     whiskey: "виски",
     cognac: "коньяк",
     none: "не пью алкоголь"
@@ -259,6 +259,11 @@
     if (dring.length > 2000) {
       dring = dring.slice(0, 2000);
     }
+    var xcom =
+      (form.querySelector("#extra_comment") && form.querySelector("#extra_comment").value.trim()) || "";
+    if (xcom.length > 2000) {
+      xcom = xcom.slice(0, 2000);
+    }
     return {
       full_name: (form.querySelector("#full_name") && form.querySelector("#full_name").value.trim()) || "",
       attending: isAttending,
@@ -266,7 +271,8 @@
       stay_overnight: Boolean(stay),
       overnight_plus1: Boolean(stay && op1),
       dring_suggestings: dring,
-      allergy: (form.querySelector("#allergy") && form.querySelector("#allergy").value.trim()) || ""
+      allergy: (form.querySelector("#allergy") && form.querySelector("#allergy").value.trim()) || "",
+      extra_comment: xcom
     };
   }
 

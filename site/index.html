@@ -59,6 +59,9 @@
           <li><time datetime="16:00">16:00</time> <span>—</span> Сбор гостей</li>
           <li><time datetime="22:00">22:00</time> <span>—</span> Окончание мероприятия</li>
         </ol>
+        <p class="program__note">
+          Тайминг и сценарий будем дополнять и дорабатывать — загляните сюда ближе к дате свадьбы.
+        </p>
       </section>
 
       <section class="location block block--light" aria-labelledby="location-title">
@@ -257,7 +260,15 @@
             <p class="form__overnight-info" id="overnight-hint">
               Помимо аренды <strong>летней веранды</strong> для гостей мы дополнительно
               снимаем <strong>несколько отдельных домиков</strong> — в каждом до
-              <strong>6</strong> человек, чтобы всем, кто останется, было комфортно.
+              <strong>6</strong> человек, чтобы всем, кто останется, было комфортно. Среди вариантов
+              есть, например, «Студия Макс» — смотрите страницу отеля:
+              <a
+                class="form__overnight-info-link"
+                href="https://oknavles.ru/products/studiya-maks-31"
+                rel="noopener noreferrer"
+                target="_blank"
+                >Студия Макс, эко&nbsp;отель «Окна в лес»</a>. Если планируете остаться на ночь, возьмите с собой удобную сменную одежду,
+              <strong>купальник для сауны</strong> и <strong>тапочки</strong>.
             </p>
           </div>
           <fieldset class="form__fieldset">
@@ -280,7 +291,7 @@
                 Вино белое
               </label>
               <label class="choice choice--check">
-                <input type="checkbox" name="alcohol" value="vodka" />
+                <input type="checkbox" name="alcohol" value="gin" />
                 <span class="choice__ui" aria-hidden="true"></span>
                 Джин
               </label>
@@ -331,6 +342,17 @@
               class="form__textarea"
               rows="3"
               placeholder="Кратко опишите, или оставьте пустым"
+            ></textarea>
+          </div>
+          <div class="form__row">
+            <label for="extra_comment">Дополнительный комментарий</label>
+            <textarea
+              id="extra_comment"
+              name="extra_comment"
+              class="form__textarea"
+              rows="3"
+              maxlength="2000"
+              placeholder="Пожелания, вопросы к организаторам, примечание — по желанию"
             ></textarea>
           </div>
           <button type="submit" class="btn btn--light" id="rsvp-submit">Отправить</button>

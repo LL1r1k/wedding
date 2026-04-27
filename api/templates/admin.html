@@ -49,6 +49,7 @@
         <th>+1 ночь</th>
         <th>Напитки</th>
         <th>Аллергия</th>
+        <th>Комментарий</th>
         <th>Действия</th>
       </tr>
     </thead>
@@ -64,6 +65,7 @@
         <td>{% if r.overnight_plus1 %}Да{% else %}Нет{% endif %}</td>
         <td class="small">{{ r.dring_suggestings or '—' }}</td>
         <td class="small">{{ r.allergy or '—' }}</td>
+        <td class="small">{{ r.extra_comment or '—' }}</td>
         <td>
           <div class="row-actions">
             <a class="linkbtn" href="/admin/edit/{{ r.id }}">Редактировать</a>
