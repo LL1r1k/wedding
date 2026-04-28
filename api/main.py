@@ -164,6 +164,15 @@ async def create_rsvp(body: RsvpCreate) -> Dict[str, Any]:
             ),
         )
         conn.commit()
+    except sqlite3.OperationalError as exc:
+        conn.rollback()
+        raise HTTPException(
+            status_code=503,
+            detail={
+                "error": "database",
+                "message": "Не удалось записать ответ в базу. Проверьте, что сервер обновлён и том с БД доступен для записи.",
+            },
+        ) from exc
     finally:
         conn.close()
 
