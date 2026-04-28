@@ -3,6 +3,8 @@ services:
     build: .
     ports:
       - "7080:80"
+    environment:
+      - ADMIN_PASS=${ADMIN_PASS}
     depends_on:
       - api
     restart: unless-stopped
@@ -11,7 +13,7 @@ services:
     build: ./api
     environment:
       - ADMIN_USER=admin
-      - ADMIN_PASS=change_me
+      - ADMIN_PASS=${ADMIN_PASS}
       - DB_PATH=/data/rsvp.db
     volumes:
       - ./data:/data

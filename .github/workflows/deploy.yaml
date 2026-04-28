@@ -5,6 +5,9 @@ on:
     branches:
       - main
 
+env:
+  ADMIN_PASS: ${{ secrets.ADMIN_PASS }}
+
 jobs:
   deploy:
     runs-on: "self-hosted"
