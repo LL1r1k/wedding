@@ -199,11 +199,23 @@ def fetch_row(response_id: int) -> sqlite3.Row | None:
     finally:
         conn.close()
 
+def _admin_table_summary(rows: List[sqlite3.Row]) -> Dict[str, int]:
+    """Сводка под таблицей админки: число «Да» и сколько раз заполнены текстовые поля."""
+    return {
+        "records": len(rows),
+        "attending_yes": sum(1 for r in rows if r["attending"]),
+        "stay_overnight_yes": sum(1 for r in rows if r["stay_overnight"]),
+        "dring_nonempty": sum(1 for r in rows if (r["dring_suggestings"] or "").strip()),
+        "allergy_nonempty": sum(1 for r in rows if (r["allergy"] or "").strip()),
+        "comment_nonempty": sum(1 for r in rows if (r["extra_comment"] or "").strip()),
+    }
+
+
 @app.get("/admin", response_class=HTMLResponse, dependencies=[Depends(require_admin)])
 def admin_page() -> HTMLResponse:
     rows = fetch_rows()
     tpl = env.get_template("admin.html")
-    html = tpl.render(rows=rows, total=len(rows))
+    html = tpl.render(rows=rows, total=len(rows), summary=_admin_table_summary(rows))
     return HTMLResponse(content=html, status_code=200)
 
 

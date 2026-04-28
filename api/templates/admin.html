@@ -13,6 +13,8 @@
     table { border-collapse: collapse; width: 100%; }
     th, td { border-bottom: 1px solid #eee; padding: 10px 8px; text-align: left; vertical-align: top; }
     th { font-weight: 600; background: #fafafa; position: sticky; top: 0; }
+    tfoot td { border-bottom: 0; border-top: 2px solid #ddd; background: #f6f7f8; font-size: 12px; font-weight: 600; color: #333; }
+    tfoot .sum-muted { font-weight: 400; color: #666; }
     .badge { display:inline-block; padding: 2px 8px; border-radius: 999px; background:#f0f0f0; font-size: 12px; }
     .empty { padding: 16px; border: 1px dashed #ddd; border-radius: 12px; color:#666; }
     .small { font-size: 12px; color:#666; }
@@ -43,10 +45,8 @@
         <th>#</th>
         <th>Дата/время</th>
         <th>Имя и фамилия</th>
-        <th>С парой / +1</th>
         <th>Присутствие</th>
         <th>Ночёвка</th>
-        <th>+1 ночь</th>
         <th>Напитки</th>
         <th>Аллергия</th>
         <th>Комментарий</th>
@@ -59,10 +59,8 @@
         <td>{{ r.id }}</td>
         <td>{{ r.created_at }}</td>
         <td>{{ r.full_name }}</td>
-        <td>{% if r.with_partner %}Да{% else %}Нет{% endif %}</td>
         <td>{% if r.attending %}Да{% else %}Нет{% endif %}</td>
         <td>{% if r.stay_overnight %}Да{% else %}Нет{% endif %}</td>
-        <td>{% if r.overnight_plus1 %}Да{% else %}Нет{% endif %}</td>
         <td class="small">{{ r.dring_suggestings or '—' }}</td>
         <td class="small">{{ r.allergy or '—' }}</td>
         <td class="small">{{ r.extra_comment or '—' }}</td>
@@ -77,6 +75,19 @@
       </tr>
       {% endfor %}
     </tbody>
+    <tfoot>
+      <tr>
+        <td>{{ summary.records }}</td>
+        <td><span class="sum-muted">—</span></td>
+        <td>анкет: <strong>{{ summary.records }}</strong></td>
+        <td>«Да»: <strong>{{ summary.attending_yes }}</strong> <span class="sum-muted">/ {{ summary.records }}</span></td>
+        <td>«Да»: <strong>{{ summary.stay_overnight_yes }}</strong> <span class="sum-muted">/ {{ summary.records }}</span></td>
+        <td>заполнено: <strong>{{ summary.dring_nonempty }}</strong> <span class="sum-muted">/ {{ summary.records }}</span></td>
+        <td>заполнено: <strong>{{ summary.allergy_nonempty }}</strong> <span class="sum-muted">/ {{ summary.records }}</span></td>
+        <td>заполнено: <strong>{{ summary.comment_nonempty }}</strong> <span class="sum-muted">/ {{ summary.records }}</span></td>
+        <td><span class="sum-muted">—</span></td>
+      </tr>
+    </tfoot>
   </table>
   {% endif %}
 </body>
