@@ -11,3 +11,7 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
+
+      - name: Docker compose up
+        run: |
+          docker compose up --build -d
